@@ -1,0 +1,11 @@
+aultak/
+├── apps/
+│   ├── server/ (Express + Node)
+│   │   ├── controllers/
+│   │   ├── services/ (AI, Email)
+│   │   └── index.js
+│   └── web/ (Next.js 14 App Router)
+│       ├── components/
+│       │   ├── 3d/ (Canvas, Model)
+│       │   ├── ui/ (ProductCard, Checkout)
+│       └── app/

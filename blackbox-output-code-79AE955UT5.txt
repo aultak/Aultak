@@ -1,0 +1,57 @@
+'use client';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useScroll, Float, Environment } from '@react-three/drei';
+import { useRef } from 'react';
+import * as THREE from 'three';
+
+function AnimatedModel() {
+  const scroll = useScroll();
+  const meshRef = useRef();
+
+  useFrame((state, delta) => {
+    // The offset is a value between 0 and 1 based on scroll position
+    const r1 = scroll.range(0, 1); 
+    
+    // Rotate based on scroll
+    meshRef.current.rotation.x = THREE.MathUtils.lerp(0, Math.PI, r1);
+    meshRef.current.rotation.y = THREE.MathUtils.lerp(0, Math.PI * 2, r1);
+    
+    // Scale effect on scroll
+    const scale = THREE.MathUtils.lerp(1, 0.5, r1);
+    meshRef.current.scale.set(scale, scale, scale);
+  });
+
+  return (
+    <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
+      <mesh ref={meshRef}>
+        <torusKnotGeometry args={[1, 0.3, 128, 16]} />
+        <meshStandardMaterial 
+          color="#333" 
+          roughness={0.1} 
+          metalness={0.8} 
+        />
+      </mesh>
+    </Float>
+  );
+}
+
+export default function HeroScrollScene() {
+  return (
+    <div className="h-[80vh] w-full sticky top-0 z-0 bg-aultak-black">
+      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+        <ambientLight intensity={0.5} />
+        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+        <pointLight position={[-10, -10, -10]} />
+        <Environment preset="city" />
+        <AnimatedModel />
+      </Canvas>
+      
+      {/* Overlay Text that fades/scrolls away */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none mix-blend-difference z-10">
+        <h1 className="text-9xl font-serif text-white tracking-tighter opacity-50">
+          AULTAK
+        </h1>
+      </div>
+    </div>
+  );
+}
